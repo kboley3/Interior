@@ -2,78 +2,34 @@ import os
 import sys
 import pexpect as pe
 
+PerPlex_path = os.path.dirname(os.path.realpath(__file__))+"/PerPlex"
 
 # hack to allow scripts to be placed in subdirectories next to ExoPlex:
 if not os.path.exists('ExoPlex') and os.path.exists('../ExoPlex'):
     sys.path.insert(1, os.path.abspath('..'))
-PerPlex_path = os.path.dirname(os.path.abspath(__file__))+ '/PerPlex'
 
 def run_perplex(*args):
-    """
-   This module runs PerPlex to produce mantle phase diagrams for a custom composition
-    if the user opts to not use the premade grids.
-
-    Parameters
-    ----------
-    Mantle_wt_per : dictionary
-        composition of mantle in oxides :math:`[wt\%]`
-
-    compositional_params: list
-        Structural parameters of the planet; See example for description
-
-    structural_params: list
-        Structural parameters of the planet; See example for description
-
-    filename: string
-       chosen filename for output file
-
-    UMLM: boolean
-        True if creating grid for upper mantle, false if lower mantle
-
-    Returns
-    -------
-    Phase diagram: file
-        Mantle phase diagram for the chosen composition. Contains P, T, expansivity, density and specific heat.
-        Stored in /Calc_Solutions/'+filename, where filename is the chosen user name
-    """
-
 
     Mantle_wt_per = args[0]
-    compositional_params = args[1]
 
-    structure_params = args[2]
-    
-    print(len(structure_params))
-    #print(args)
+    FeMg = args[1][1]
+    SiMg = args[1][2]
+    CaMg = args[1][3]
+    AlMg = args[1][4]
+    mol_frac_Fe_mantle = args[1][5]
+    wt_frac_Si_core = args[1][6]
 
-    FeMg = compositional_params[1]
-    SiMg = compositional_params[2]
-    CaMg = compositional_params[3]
-    AlMg = compositional_params[4]
-    mol_frac_Fe_mantle = compositional_params[5]
-
-    wt_frac_Si_core = compositional_params[6]
-    use_grids = compositional_params[10]
+    Pressure_range_mantle = args[2][0]
+    Temperature_range_mantle = args[2][1]
+    resolution = args[2][2]
 
     filename = args[3]
-    if len(structure_params)<4: 
-        UMLM = True 
-    else:
-        UMLM =args[4]
-
-    if UMLM == True:
-        Pressure_range_mantle = structure_params[0]
-        Temperature_range_mantle = structure_params[1]
-        resolution = structure_params[2]
-
-    else:
-        Pressure_range_mantle = structure_params[3]
-        Temperature_range_mantle = structure_params[4]
-        resolution = structure_params[5]
+    UMLM = args[4]
 
     plxMan = str(Mantle_wt_per.get('MgO')) + ' ' + str(Mantle_wt_per.get('SiO2')) + ' ' \
              + str(Mantle_wt_per.get('FeO')) + ' ' + str(Mantle_wt_per.get('CaO')) \
              + ' ' + str(Mantle_wt_per.get('Al2O3'))+ ' ' + str(0.) #last value included for Na
+
 
     solfileparamsString0 = '_' + str(round(SiMg, 3)) + '_' + str(round(FeMg, 3)) + '_' + str(
         round(CaMg, 3)) + '_' + str(round(AlMg, 3)) \
@@ -83,40 +39,28 @@ def run_perplex(*args):
     solfileparamsString = solfileparamsString0.replace('.', ',')
 
     solutionFileNameMan = 'SiMg_FeMg_CaMg_AlMg_XFeO_fSic' + solfileparamsString + '_MANTLE'
-    solutionFileNameMan_short = list(solutionFileNameMan)
-    solutionFileNameMan_short[0:30] = []
-
-    solutionFileNameMan = "".join(solutionFileNameMan_short)
-
-    if use_grids == False:
-        filename = solutionFileNameMan
 
 
-    if os.path.isfile('../Solutions_Small/'+filename+'_UM_results.txt') and UMLM == True and use_grids==True:
+    if os.path.isfile('../Solutions/'+filename+'_UM.tab') and UMLM == True:
         print ('The Upper mantle .tab already exists, please wait briefly for solution\n')
-        return '../Solutions_Small/' + filename
+        return '../Solutions/' + filename
 
-    if os.path.isfile('../Solutions_Small/'+filename+'_LM_results.txt') and UMLM == False and use_grids==True:
+    if os.path.isfile('../Solutions/'+filename+'_LM.tab') and UMLM == False:
         print ('The Lower mantle .tab already exists, please wait briefly for solution\n')
-        return '../Solutions_Small/' + filename
+        return '../Solutions/' + filename
 
     else:
-        if os.path.isfile('../Calc_Solutions/'+solutionFileNameMan+'_UM_results.txt') == True and UMLM == True:
-            filename = solutionFileNameMan
-            print ('The Upper mantle .tab already exists, please wait briefly for solution\n')
-            return '../Calc_Solutions/' + filename
-
-        if os.path.isfile('../Calc_Solutions/'+solutionFileNameMan+'_LM_results.txt') == True and UMLM == False:
-            filename = solutionFileNameMan
-
-            print ('The Lower mantle .tab already exists, please wait briefly for solution\n')
-            return '../Calc_Solutions/' + filename
+        if UMLM == True:
+            print ('Making upper mantle PerPlex phase file. \n This will be stored in: ../Solutions/'+ filename+'_UM.tab')
         else:
-            if  UMLM == True:
-                print ('Making upper mantle PerPlex phase file. \n This will be stored in: ../Calc_Solutions/'+ filename+'_UM_results.txt')
-            else:
+            print ('Making lower mantle PerPlex phase file. \n This will be stored in: ../Solutions/'+ filename+'_LM.tab')
 
-                print ('Making lower mantle PerPlex phase file. \n This will be stored in: ../Calc_Solutions/'+ filename+'_LM_results.txt')
+        #we need to shorten the file name for PerPlex to accept it
+        solutionFileNameMan_short = list(solutionFileNameMan)
+        solutionFileNameMan_short[0:30] = []
+
+        solutionFileNameMan = "".join(solutionFileNameMan_short)
+    # define perplex inputs in terms of components, this is for legibility
 
     component1 = 'MGO'
     component2 = 'SIO2'
@@ -125,27 +69,12 @@ def run_perplex(*args):
     component5 = 'AL2O3'
     component6 = 'NA2O'
 
-    if os.path.isfile(solutionFileNameMan+'.arf')==True:
-        os.remove(solutionFileNameMan+'.arf')
-        os.remove(solutionFileNameMan+'.blk')
-        os.remove(solutionFileNameMan+'.dat')
-        os.remove(solutionFileNameMan+'.plt')
-        os.remove(solutionFileNameMan+'.tof')
-
-        os.remove(solutionFileNameMan + '_VERTEX_options.txt')
-        os.remove(solutionFileNameMan + '_WERAMI_options.txt')
-        os.remove(solutionFileNameMan + '_auto_refine.txt')
-        
-    print(PerPlex_path)
-    print(PerPlex_path+"/./build")
-
     p = pe.spawn(PerPlex_path+"/./build")
 
 
     p.sendline(solutionFileNameMan)
-    p.sendline(PerPlex_path + '/stx11ver.dat')
-
-    p.sendline(PerPlex_path + '/perplex_options.dat')
+    p.sendline('../ExoPlex/PerPlex/stx11ver.dat')
+    p.sendline('../ExoPlex/PerPlex/perplex_options.dat')
     # Transform them (Y/N)?
     p.sendline('N')
     # Calculations with saturated components (Y/N)?
@@ -163,7 +92,7 @@ def run_perplex(*args):
     # Specify computational mode:
 
     p.sendline('2')
-
+    
     # Make one dependent on the other, e.g., as along a geothermal gradient (y/n)?
     p.sendline('N')
 
@@ -188,7 +117,7 @@ def run_perplex(*args):
 
     # Include solution models (Y/N)?
     p.sendline('Y')
-    p.sendline(PerPlex_path + '/stx11_solution_model.dat')
+    p.sendline('../ExoPlex/PerPlex/stx11_solution_model.dat')
     p.sendline('C2/c') #C2C Phase of clinopyroxene
     p.sendline('Wus')
     p.sendline('Pv')
@@ -205,7 +134,6 @@ def run_perplex(*args):
     p.sendline('CF')
     p.sendline('')
     # Enter calculation title:
-
     p.sendline(solutionFileNameMan + 'calc')
 
     p.logfile = open('build.log','wb')
@@ -310,21 +238,20 @@ def run_perplex(*args):
     print ("Done with PerPlex")
 
     if UMLM == True:
-        os.rename(solutionFileNameMan+'_1.tab','../Calc_Solutions/'+filename+'_UM_results.txt')
+        os.rename(solutionFileNameMan+'_1.tab','../Solutions/'+filename+'_UM.tab')
     else:
-        os.rename(solutionFileNameMan + '_1.tab', '../Calc_Solutions/' + filename + '_LM_results.txt')
+        os.rename(solutionFileNameMan + '_1.tab', '../Solutions/' + filename + '_LM.tab')
 
     os.remove(solutionFileNameMan+'.arf')
     os.remove(solutionFileNameMan+'.blk')
     os.remove(solutionFileNameMan+'.dat')
     os.remove(solutionFileNameMan+'.plt')
     os.remove(solutionFileNameMan+'.tof')
-
     os.remove(solutionFileNameMan+'_VERTEX_options.txt')
     os.remove(solutionFileNameMan+'_WERAMI_options.txt')
     os.remove(solutionFileNameMan+'_auto_refine.txt')
 
-    filename = '../Calc_Solutions/'+filename
+    filename = '../Solutions/'+filename
 
     return filename
 

@@ -19,6 +19,8 @@ def bulk_modulus_fourth(volume, params):
     """
 
     x = params['V_0'] / volume
+    #print ("volume: ", volume)
+    
     f = 0.5 * (pow(x, 2. / 3.) - 1.0)
 
     Xi = (3. / 4.) * (4. - params['Kprime_0'])
@@ -49,7 +51,7 @@ def birch_murnaghan_fourth(x, params):
     pressure in the same units that are supplied for the reference bulk
     modulus (params['K_0'])
     """
-
+    #print ("x: ",x)
     f = 0.5 * (pow(x, 2. / 3.) - 1.0)
     Xi = (3. / 4.) * (4. - params['Kprime_0'])
     Zeta = (3. / 8.) * ((params['K_0'] * params['Kprime_prime_0']) + params[

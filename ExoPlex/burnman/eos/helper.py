@@ -44,8 +44,6 @@ def create(method):
             return hp.HP_TMT()
         elif method == "cork":
             return cork.CORK()
-        elif method == "flat":
-            return bm.Flat()
         else:
             raise Exception("unsupported material method " + method)
     elif isinstance(method, EquationOfState):
