@@ -181,7 +181,7 @@ def initialize_by_mass(*args):
         core_mass = (core_mass_frac * (mass_planet*Earth_mass-water_mass))
         print("COREMASS 2: " + str(core_mass))
     '''
-    print('CORE MASSSSSS IN PLANET: ' + str(core_mass_frac))
+    print('CORE MASS IN PLANET: ' + str(core_mass_frac))
     water_mass = (wt_frac_water*mass_planet)*Earth_mass 
     core_mass = (core_mass_frac * (mass_planet*Earth_mass-water_mass))
     mantle_mass = (mass_planet*Earth_mass)-water_mass-core_mass
@@ -227,8 +227,8 @@ def initialize_by_mass(*args):
         mass_update[i]=(sum(mass_layers[:i+1]))
 
     mass_layers= mass_update
-    print("CORE MASSSSSS: " + str(mass_layers[num_core_layers]))
-    print('CORE MASSSS IN INITIALIZE BEING PASSED: '+str(core_mass))
+    print("CORE MASS: " + str(mass_layers[num_core_layers]))
+    print('CORE MASS IN INITIALIZE BEING PASSED: '+str(core_mass))
 
     #initial temperature guess of 0.5 K per km
     keys = ['mass','density','temperature','gravity','pressure',\
@@ -254,7 +254,7 @@ def compress_radius(*args):
     converge = False
     print
     while n_iterations <= max_iterations and converge == False:
-        print ("iteration #",n_iterations)
+        #print ("iteration #",n_iterations)
 
 
         for i in range(len(Planet['density'])):
@@ -294,7 +294,7 @@ def compress_mass(*args):
     converge = False
     print
     while n_iterations <= max_iterations and converge == False:
-        print ("iteration #",n_iterations)
+        #print ("iteration #",n_iterations)
         if n_iterations>1:
             converge,old_r = minphys.check_convergence(Planet['density'],old_r)
 
@@ -312,7 +312,7 @@ def compress_mass(*args):
 
 
         Planet['density'] = minphys.get_rho(Planet,grids,Core_wt_per,layers)
-        print (Planet['density'][-1])
+        #print (Planet['density'][-1])
 
         Planet['radius'] = minphys.get_radius(Planet, layers)
         Planet['gravity'] = minphys.get_gravity(Planet,layers)

@@ -28,7 +28,7 @@ SiMg=0.89
 
 
 
-cmf_rho, Planet, num_core_layers, num_mantle_layers, num_h2o_layers = CMF.compCMF(water, SiMg, FeMg,7.74, 1.89, 0.9, cmf_flag = 1.0)
+cmf_rho, Planet, num_core_layers, num_mantle_layers, num_h2o_layers = CMF.compCMF(water, SiMg, FeMg,7.74, 1.89, 0.015, cmf_flag = 1.0)
 
 
 figure = plt.figure(figsize = (12,10))

@@ -63,7 +63,7 @@ def compCMF(water, Si, Fe, mass, radius0, CMF_var, cmf_flag = 1.0):
         #specify mantle and core layers
         num_mantle_layers = 2000; num_core_layers = 1000; number_h2o_layers = 0;
 
-        Core_rad_frac_guess = 0.5;  Water_rad_frac_guess = 0.; 
+        Core_rad_frac_guess = 0.015;  Water_rad_frac_guess = 0.; 
         Mantle_potential_temp = 1600.;  Water_potential_temp = 300.;
 
         #0.324
@@ -169,8 +169,8 @@ def compCMF(water, Si, Fe, mass, radius0, CMF_var, cmf_flag = 1.0):
             
         print ("Mass = ", '%.3f'%(Planet1['mass'][-1]/5.97e24), "Earth masses")
         print ("Radius = ", '%.3f'%(Planet1['radius'][-1]/6371e3), "Earth radii")
-        print ("Core Mass Fraction = ", '%.2f'%(Planet1['mass'][num_core_layers]/Planet1['mass'][-1]))
-        print ("Core Radius Fraction = ", '%.2f'%(Planet1['radius'][num_core_layers]/Planet1['radius'][-1]))
+        print ("Core Mass Fraction = ", '%.4f'%(Planet1['mass'][num_core_layers]/Planet1['mass'][-1]))
+        print ("Core Radius Fraction = ", '%.4f'%(Planet1['radius'][num_core_layers]/Planet1['radius'][-1]))
         print ("CMB Pressure = " ,'%.2f' % (Planet1['pressure'][num_core_layers]/10000), "GPa")
         print ("number of oceans:",'%.2f' % (water*Planet1['mass'][-1]/1.4e21))
             
