@@ -92,7 +92,7 @@ def initialize_by_radius(*args):
             Pressure_layers[i] = (float((5000.-(300.*10000))/float(num_core_layers+num_mantle_layers))*float(i)
                                   + 300.*10000)
 
-    print (Pressure_layers)
+    
     #initial temperature guess of 0.5 K per km
     keys = ['radius','density','temperature','gravity','pressure',\
             'alpha','cp','Vphi''Vp','Vs','K']
@@ -252,9 +252,9 @@ def compress_radius(*args):
 
     old_rho = [10  for i in range(len(Planet['density']))]
     converge = False
-    print
+    
     while n_iterations <= max_iterations and converge == False:
-        #print ("iteration #",n_iterations)
+        print ("iteration #",n_iterations)
 
 
         for i in range(len(Planet['density'])):
@@ -292,7 +292,7 @@ def compress_mass(*args):
 
     old_r = [10  for i in range(len(Planet['mass']))]
     converge = False
-    print
+    
     while n_iterations <= max_iterations and converge == False:
         #print ("iteration #",n_iterations)
         if n_iterations>1:
@@ -305,7 +305,6 @@ def compress_mass(*args):
             if np.isnan(Planet['density'][i]) == True:
                 print ("Density has a nan")
                 print (i, Planet['pressure'][i],Planet['temperature'][i])
-                print
                 #print "pressure range mantle",structural_params[0]
                 #print "temperature range mantle",structural_params[1]
                 sys.exit()

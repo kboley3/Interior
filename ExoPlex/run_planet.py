@@ -52,10 +52,10 @@ def run_planet_mass(mass_planet, compositional_params, structure_params, layers,
     
 
         
-    print ( Core_wt_per)
+    '''print ( Core_wt_per)
     print (Mantle_wt_per)
     print (Core_mol_per)
-    print (core_mass_frac)
+    print (core_mass_frac)'''
     #sys.exit()
     #Run fine mesh grid
     Mantle_filename = run_perplex.run_perplex(*[Mantle_wt_per,compositional_params,[structure_params[0],structure_params[1],structure_params[2]],filename,True])

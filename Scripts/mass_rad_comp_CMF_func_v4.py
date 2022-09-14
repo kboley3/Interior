@@ -171,6 +171,7 @@ def compCMF(water, Si, Fe, mass, radius0, CMF_var, cmf_flag = 1.0):
         print ("Radius = ", '%.3f'%(Planet1['radius'][-1]/6371e3), "Earth radii")
         print ("Core Mass Fraction = ", '%.4f'%(Planet1['mass'][num_core_layers]/Planet1['mass'][-1]))
         print ("Core Radius Fraction = ", '%.4f'%(Planet1['radius'][num_core_layers]/Planet1['radius'][-1]))
+        print ("Core Radius Fraction Variance = ", '%.4f'%(CMF_var))
         print ("CMB Pressure = " ,'%.2f' % (Planet1['pressure'][num_core_layers]/10000), "GPa")
         print ("number of oceans:",'%.2f' % (water*Planet1['mass'][-1]/1.4e21))
             
